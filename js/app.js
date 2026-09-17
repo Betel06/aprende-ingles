@@ -1220,7 +1220,9 @@ const ABC_LESSONS = {
 let basicoKey = null;
 let basicoQ = null;
 let basicoRound = null;
-var API_BASE = (location.hostname.indexOf('github.io') >= 0) ? 'https://aprende-musica.onrender.com' : '';
+/* Musica requer o servidor local youtube_server.py (iniciar.bat).
+   Se um dia fixarmos um backend (ex.: Render), basta preencher esta URL. */
+var API_BASE = '';
 let gradMode = false;
 let gradFase = 1; /* 1 = com som | 2 = Fase 2 Graduacao (sem som) */
 
