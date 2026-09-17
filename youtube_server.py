@@ -18,6 +18,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 PORT = int(os.environ.get("PORT", "5110"))
+ON_RENDER = os.environ.get("RENDER") == "1"
+HOST = "0.0.0.0" if ON_RENDER else "127.0.0.1"
 
 VIDEO_ID_RE = re.compile(
     r"(?:youtube\.com/(?:watch\?[^#]*v=|embed/|shorts/|live/|shorts%2F)|youtu\.be/)([\w-]{11})"
@@ -407,9 +409,11 @@ def download_media(video_id):
         "no_warnings": True,
         "noplaylist": True,
         "outtmpl": outtmpl,
-        "format": ("bestvideo[ext=mp4][vcodec^=avc][height<=480]+bestaudio[ext=m4a]/"
-                   "bestvideo[ext=mp4][height<=480]+bestaudio[ext=m4a]/"
-                   "best[ext=mp4]/best[ext=m4a]/bestaudio/best"),
+        "format": (
+            "best[ext=mp4]/bestaudio[ext=m4a]/bestaudio/best" if ON_RENDER else
+            "bestvideo[ext=mp4][vcodec^=avc][height<=480]+bestaudio[ext=m4a]/"
+            "bestvideo[ext=mp4][height<=480]+bestaudio[ext=m4a]/"
+            "best[ext=mp4]/best[ext=m4a]/bestaudio/best"),
         "extractor_args": {"youtube": {"player_client": ["android", "ios", "web"]}},
         "retries": 3,
         "socket_timeout": 20,
@@ -1065,12 +1069,16 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     import threading
-    import webbrowser
+    if ON_RENDER:
+        from http.server import BaseHTTPRequestHandler as _B
+        _B.log_message = lambda *a: None
+    else:
+        import webbrowser
 
     cleanup_media()
-    no_open = "--no-open" in sys.argv
+    no_open = "--no-open" in sys.argv or ON_RENDER
     try:
-        srv = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+        srv = ThreadingHTTPServer((HOST, PORT), Handler)
     except OSError:
         url = "http://127.0.0.1:{}".format(PORT)
         print("Ja existe uma instancia do app rodando na porta " + str(PORT) + ".")
@@ -1078,7 +1086,7 @@ def main():
             threading.Timer(0.6, lambda: webbrowser.open(url)).start()
         return
 
-    url = "http://127.0.0.1:{}".format(PORT)
+    url = "http://{}:{}".format(HOST, PORT)
     print("App Aprende Ingles rodando em " + url)
     if not no_open:
         threading.Timer(0.6, lambda: webbrowser.open(url)).start()

@@ -209,7 +209,7 @@ let ytBlockedVid = '';
 let mediaEl = null;
 
 window.addEventListener('beforeunload', () => {
-  try { fetch('/api/cleanup', { method: 'POST' }).catch(() => {}); } catch (e) {}
+  try { fetch(API_BASE + '/api/cleanup', { method: 'POST' }).catch(() => {}); } catch (e) {}
 });
 
 function currentPlayTime() {
@@ -399,7 +399,7 @@ function ytLoadFromInput(inputId) {
   setYtStatus(statusSel, 'Buscando "' + q.slice(0, 40) + '"... (baixa na hora; apaga depois de usar)');
   const expanded = extractVideoId(q) ? q : q;
 
-  fetch('/api/ytfetch', {
+  fetch(API_BASE + '/api/ytfetch', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query: expanded })
@@ -417,7 +417,7 @@ function ytLoadFromInput(inputId) {
         level: 'YouTube',
         audio: '',
         yt: { videoId: res.video_id },
-        media: res.file,
+        media: API_BASE + res.file,
         mediaKind: res.kind || 'video',
         thumbnail: res.thumbnail || '',
         ytLines: merged,
@@ -444,7 +444,7 @@ function ytLoadFromInput(inputId) {
 
       if (preTransl.length) return;
 
-      fetch('/api/translate', {
+      fetch(API_BASE + '/api/translate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lines: merged.map(l => l.text) })
@@ -1220,6 +1220,7 @@ const ABC_LESSONS = {
 let basicoKey = null;
 let basicoQ = null;
 let basicoRound = null;
+var API_BASE = (location.hostname.indexOf('github.io') >= 0) ? 'https://aprende-musica.onrender.com' : '';
 let gradMode = false;
 let gradFase = 1; /* 1 = com som | 2 = Fase 2 Graduacao (sem som) */
 
