@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Servidor local do App Aprende Inglês.
+Servidor local do App Start Inglês.
 
 Serve a página + endpoints de YouTube (metadados e legendas).
 Rode com:  python youtube_server.py
@@ -1087,7 +1087,7 @@ def main():
         return
 
     url = "http://{}:{}".format(HOST, PORT)
-    print("App Aprende Ingles rodando em " + url)
+    print("App Start Ingles rodando em " + url)
     if not no_open:
         threading.Timer(0.6, lambda: webbrowser.open(url)).start()
     srv.serve_forever()
