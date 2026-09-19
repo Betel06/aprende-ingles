@@ -1702,6 +1702,78 @@ let memPairCount = 0;
 let memLocked = false;
 let memFlipped = [];
 
+/* ===== ENSINANDO POR FRASE (v36) ===== */
+let fraseCat = nullUpper, fraseIdx = 0, fraseRevealed = false;
+function openFrase() {
+  stopEverything();
+  view('frase');
+  if (!fraseCat) fraseCat = FRASES_CATEGORIAS[0].id;
+  renderFrase();
+}
+function renderFrase() {
+  const cat = FRASES_CATEGORIAS.find(c => c.id === fraseCat);
+  if (!cat) return;
+  $('#frase-cats').innerHTML = '';
+  FRASES_CATEGORIAS.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'cat-pill' + (c.id === fraseCat ? ' active' : '');
+    b.textContent = c.name;
+    b.onclick = () => { fraseCat = c.id; fraseIdx = 0; fraseRevealed = false; renderFrase(); };
+    $('#frase-cats').appendChild(b);
+  });
+  drawFrase(cat, fraseIdx);
+}
+// usa +- com borda; reusa declaração existente abaixo (speakEn) sem colidir
+let fraseCatQuebrada = 0;
+function drawFrase(cat, idx) {
+  if (!cat || idx > cat.items.length - 1) { fraseIdx = 0; idx = 0; }
+  const it = cat.items[idx];
+  const wordTag = '<b class="fr-word">' + it.word + '</b>';
+  const sent = it.en.replace(new RegExp('\\b' + it.word + '\\b', 'i'), wordTag);
+  const covered = fraseRevealed ? it.pt : '<span class="fr-cover" onclick="fraseRevealPt()">ver tradu\u00e7\u00e3o</span>';
+  $('#frase-card').innerHTML =
+    '<div class="fr-card">' +
+      '<div class="fr-en" onclick="speakEn(\'' + it.en.replace(/'/g, "\\'") + '\')">' + sent + '</div>' +
+      '<div class="fr-pt">' + covered + '</div>' +
+      '<div class="fr-controls">' +
+        '<button class="btn ghost" onclick="fraseSpeakWord()">\u{1F50A} Palavra</button>' +
+        '<button class="btn ghost" onclick="fraseSpeakFull()">\u{1F3A4} Frase</button>' +
+      '</div>' +
+    '</div>';
+  $('#frase-progress').textContent = (idx + 1) + ' / ' + cat.items.length;
+}
+function fraseRevealPt() {
+  fraseRevealed = true;
+  drawFrase(FRASES_CATEGORIAS.find(c => c.id === fraseCat), fraseIdx);
+}
+function fraseSpeakWord() {
+  const cat = FRASES_CATEGORIAS.find(c => c.id === fraseCat);
+  const it = cat.items[fraseIdx];
+  speakEn(it.word);
+}
+function fraseSpeakFull() {
+  const cat = FRASES_CATEGORIAS.find(c => c.id === fraseCat);
+  speakEn(cat.items[fraseIdx].en);
+}
+function fraseNext() {
+  const cat = FRASES_CATEGORIAS.find(c => c.id === fraseCat);
+  fraseIdx = (fraseIdx + 1) % cat.items.length;
+  fraseRevealed = false;
+  drawFrase(cat, fraseIdx);
+}
+function frasePrev() {
+  const cat = FRASES_CATEGORIAS.find(c => c.id === fraseCat);
+  fraseIdx = (fraseIdx - 1 + cat.items.length) % cat.items.length;
+  fraseRevealed = false;
+  drawFrase(cat, fraseIdx);
+}
+function fraseNovo() {
+  const cat = FRASES_CATEGORIAS.find(c => c.id === fraseCat);
+  fraseIdx = Math.floor(Math.random() * cat.items.length);
+  fraseRevealed = false;
+  drawFrase(cat, fraseIdx);
+}
+
 function openMemory() {
   stopEverything();
   view('memory');

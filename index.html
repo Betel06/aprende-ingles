@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Start Inglês — Aprenda inglês com música</title>
-  <link rel="stylesheet" href="css/style.css?v=35">
+  <link rel="stylesheet" href="css/style.css?v=37">
 </head>
 <body>
   <header class="topbar">
@@ -17,6 +17,7 @@
       <button onclick="openGraduacao()">Graduação</button>
       <button onclick="openDictation()">Ditado</button>
       <button onclick="openMemory()">Memória</button>
+      <button onclick="openFrase()">Frase</button>
       <button onclick="openSpell()">Soletrar</button>
       <button onclick="openDict()">Dicionário</button>
       <button onclick="openTeacher()">Professora</button>
@@ -156,6 +157,25 @@
       <div id="dict-game" class="hidden"></div>
     </section>
 
+    <!-- ============ ENSINANDO POR FRASE ============ -->
+    <section id="view-frase" class="view hidden">
+      <h2>Ensinando por Frase</h2>
+      <p class="sub">Uma palavra por vez: leia a frase em inglês, entenda a palavra-alvo em destaque. A tradução fica coberta — clique nela para revelar e ouvir de novo.</p>
+      <div id="frase-cats" class="setup-block"></div>
+      <div class="controls">
+        <label class="checkbox"><input type="checkbox" id="frase-pt" onchange="renderFrase()"> Mostrar tradução revelada</label>
+        <button class="btn primary" onclick="fraseNovo()">Trocar frase</button>
+        <button class="btn ghost" onclick="fraseSpeakWord()">Ouvir palavra</button>
+        <button class="btn ghost" onclick="fraseSpeakFull()">Ouvir frase</button>
+      </div>
+      <div id="frase-card" class="frase-box"></div>
+      <div id="frase-progress" class="frase-progress"></div>
+      <div class="controls">
+        <button class="btn ghost" onclick="frasePrev()">&#8592; Anterior</button>
+        <button class="btn ghost" onclick="fraseNext()">Próxima &#8594;</button>
+      </div>
+    </section>
+
     <!-- ============ MEMORIA ============ -->
     <section id="view-memory" class="view hidden">
       <h2>Jogo da Memória</h2>
@@ -244,9 +264,10 @@
     </div>
   </div>
 
-  <script src="js/words.js?v=35"></script>
-  <script src="js/songs.js?v=35"></script>
-  <script src="js/chunks.js?v=35"></script>
-  <script src="js/app.js?v=35"></script>
+  <script src="js/words.js?v=36"></script>
+  <script src="js/songs.js?v=36"></script>
+  <script src="js/chunks.js?v=36"></script>
+  <script src="js/frases.js?v=37"></script>
+  <script src="js/app.js?v=37"></script>
 </body>
 </html>
