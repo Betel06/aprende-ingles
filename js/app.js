@@ -1703,7 +1703,7 @@ let memLocked = false;
 let memFlipped = [];
 
 /* ===== ENSINANDO POR FRASE (v36) ===== */
-let fraseCat = nullUpper, fraseIdx = 0, fraseRevealed = false;
+let fraseCat = null, fraseIdx = 0, fraseRevealed = false;
 function openFrase() {
   stopEverything();
   view('frase');
